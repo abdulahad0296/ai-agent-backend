@@ -1,37 +1,51 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from .tasks import run_ai_agent, AgentInteraction
 from celery.result import AsyncResult
-from .tasks import run_ai_agent
-from .models import AgentInteraction
-
-def trigger_agent(request):
-    # Get the 'prompt' from the URL, or use a default if missing
-    user_prompt = request.GET.get('prompt', 'Default instruction')
-
-    # Pass this prompt to the Celery task
-    task = run_ai_agent.delay(user_prompt)   
-    
-
-    return JsonResponse({
-        "status": "success", 
-        "message": "Agent started working.", 
-        "task_id": task.id,
-        "input_received": user_prompt
-    })
-
-def get_task_status(request, task_id):
-    # Ask Celery about this specific ID
-    result = AsyncResult(task_id)
-    
-    response = {
-        "task_id": task_id,
-        "status": result.status, 
-        "result": result.result if result.ready() else None
-    }
-    
-    return JsonResponse(response)
+import uuid 
 
 def index(request):
-    # This is to fetch last 5 chats in newest first order
-    history = AgentInteraction.objects.all().order_by('created_at') 
-    return render(request, 'agents/index.html', {'history': history})
+    # Check Session ID
+    if not request.session.session_key:
+        request.session.create()
+    
+    # Get or Create a Conversation ID
+    if request.method == 'GET' and 'conversation_id' not in request.GET:
+        conversation_id = str(uuid.uuid4())[:8] # Random short ID
+    else:
+        # If they are continuing a chat, keep the ID
+        conversation_id = request.GET.get('conversation_id')
+
+    # 3. Only load messages for THIS conversation
+    history = AgentInteraction.objects.filter(
+        session_id=request.session.session_key,
+        conversation_id=conversation_id
+    ).order_by('created_at')
+
+    return render(request, 'agents/index.html', {
+        'history': history,
+        'conversation_id': conversation_id # Pass this to HTML
+    })
+
+def start_task(request):
+    prompt = request.GET.get('prompt')
+    
+    # 4. Get IDs to pass to the worker
+    session_id = request.session.session_key
+    conversation_id = request.GET.get('conversation_id')
+
+    if prompt and session_id and conversation_id:
+        # Pass IDs to the worker
+        task = run_ai_agent.delay(prompt, session_id, conversation_id)
+        return JsonResponse({'task_id': task.id})
+    return JsonResponse({'error': 'Missing data'}, status=400)
+
+def get_status(request, task_id):
+    
+    task_result = AsyncResult(task_id)
+    result = {
+        "task_id": task_id,
+        "status": task_result.status,
+        "result": task_result.result
+    }
+    return JsonResponse(result)

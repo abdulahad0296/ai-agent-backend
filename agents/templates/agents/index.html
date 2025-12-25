@@ -48,6 +48,7 @@
     </div>
 
     <script>
+        const CONVERSATION_ID = "{{ conversation_id }}";
         // Auto-scroll to bottom on load
         const chatBox = document.getElementById('chat-box');
         chatBox.scrollTop = chatBox.scrollHeight;
@@ -71,7 +72,7 @@
 
             try {
                 // 2. Start the Task
-                const response = await fetch(`/agents/start/?prompt=${encodeURIComponent(prompt)}`);
+                const response = await fetch(`/agents/start/?prompt=${encodeURIComponent(prompt)}&conversation_id=${CONVERSATION_ID}`);
                 const data = await response.json();
                 const taskId = data.task_id;
 

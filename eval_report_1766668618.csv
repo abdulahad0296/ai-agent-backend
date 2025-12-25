@@ -1,0 +1,11 @@
+prompt,response,latency_seconds
+What is the capital of France?,The capital of France is Paris.,2.28
+Who won the Cricket World Cup 2023?,"We were just discussing this earlier, Australia won the Cricket World Cup 2023. They defeated Sri Lanka in the final.",1.16
+Explain Quantum Computing in one sentence.,"Quantum computing is a type of computing that uses the principles of quantum mechanics to perform calculations and operations through the use of qubits (quantum bits), which can exist in multiple states simultaneously, allowing for exponentially faster processing and analysis of complex data.",1.15
+What is the current price of Bitcoin?,"Unfortunately, I don't have real-time data on the current price of Bitcoin. However, my knowledge cutoff is in 2023, and as of that time, the price of Bitcoin had fluctuated depending on the market conditions.
+
+If you're looking for the current price, I would recommend checking a reliable financial news source or a cryptocurrency exchange website for the most up-to-date information.
+
+But if you'd like to know the price of Bitcoin in 2023, it varied around 20,000-40,000 USD per coin, depending on various market factors.",1.15
+Who is the CEO of Tesla?,Elon Musk is the CEO of Tesla.,1.19
+How old is he?,"Elon Musk was born on June 28, 1971. Based on this, he is currently 54 years old (assuming the current year is 2025).",1.17
