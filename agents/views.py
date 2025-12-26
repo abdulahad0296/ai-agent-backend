@@ -5,15 +5,14 @@ from celery.result import AsyncResult
 import uuid 
 
 def index(request):
-    # Check Session ID
+    # 1. FORCE SESSION CREATION AND SAVE
     if not request.session.session_key:
         request.session.create()
-    
-    # Get or Create a Conversation ID
+        request.session.save() 
+    # 2. Get or Create a Conversation ID
     if request.method == 'GET' and 'conversation_id' not in request.GET:
-        conversation_id = str(uuid.uuid4())[:8] # Random short ID
+        conversation_id = str(uuid.uuid4())[:8]
     else:
-        # If they are continuing a chat, keep the ID
         conversation_id = request.GET.get('conversation_id')
 
     # 3. Only load messages for THIS conversation
@@ -24,7 +23,7 @@ def index(request):
 
     return render(request, 'agents/index.html', {
         'history': history,
-        'conversation_id': conversation_id # Pass this to HTML
+        'conversation_id': conversation_id
     })
 
 def start_task(request):
