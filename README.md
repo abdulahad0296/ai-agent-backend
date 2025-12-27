@@ -9,9 +9,9 @@ This project implements a scalable **Event-Driven Architecture** to handle high 
 **Key Capabilities:**
 
 * **Context Awareness:** Remembers previous turns in the convo (e.g., "Who is Elon Musk?" -> "How old is *he*?").
-* ** RAG (Real-Time Search):** Uses DuckDuckGo to fetch live data for queries about current events (e.g., "Stock price of Apple", "Sports scores").
-* ** Async Processing:** Offloads heavy LLM & Search operations to Celery workers backed by Redis.
-* ** Multi-User Privacy:** Secure session management ensures users cannot see each other's chats.
+* **RAG (Real-Time Search):** Uses DuckDuckGo to fetch live data for queries about current events (e.g., "Stock price of Apple", "Sports scores").
+* **Async Processing:** Offloads heavy LLM & Search operations to Celery workers backed by Redis.
+* **Multi-User Privacy:** Secure session management ensures users cannot see each other's chats.
 
 ---
 
